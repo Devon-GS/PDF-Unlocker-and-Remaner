@@ -11,43 +11,52 @@ if locked_files_folder == False:
     os.mkdir('locked_files')
 
 # Get list of files
-# file_list = os.listdir('files')
+file_list = os.listdir('locked_files')
+print(file_list)
+
+# Decrypt PDF
+for filename in file_list:
+    file = f'locked_files/{filename}'
+    
+    # Open files with reader
+    reader = PdfReader(file)
+    writer = PdfWriter()
+    
+    # Check if encrypted
+    if reader.is_encrypted:
+        reader.decrypt(password)
+
+    # Add all pages to the writer
+    for page in reader.pages:
+        writer.add_page(page)
+
+    # Save the new PDF to a file
+    with open(file, "wb") as f:
+        writer.write(f)
 
 
 
 
 
-
-
-# # Decrypt PDF
-# reader = PdfReader("Locked.pdf")
-# writer = PdfWriter()
-
-# if reader.is_encrypted:
-#     reader.decrypt(password)
-
-# # Add all pages to the writer
-# for page in reader.pages:
-#     writer.add_page(page)
-
-# # Save the new PDF to a file
-# with open("decrypted-pdf.pdf", "wb") as f:
-#     writer.write(f)
-
+# # Get list of files
+# file_list_unlocked = os.listdir('locked_files')
+# print(file_list_unlocked)
 
 # # Look up Date of pdf and rename
-# reader = PdfReader('Statement Unlocked.pdf')
-# number_of_pages = len(reader.pages)
-# page = reader.pages[0]
-# text = page.extract_text()
+# for filename in file_list_unlocked:
+#     file = f'locked_files/{filename}'
+#     reader = PdfReader(file)
+#     number_of_pages = len(reader.pages)
+#     page = reader.pages[0]
+#     text = page.extract_text()
 
-# x = text.find('Statement period')
-# # print(text[1302:1343])
+#     x = text.find('Statement period')
+#     # print(text[1302:1343])
 
-# q = text[1302:1343]
-# # print(q)
+#     q = text[1302:1343]
+#     # print(q)
 
-# w = q[18:28] + ' - ' + q[31:41]
-# e = str(int(w[0:2]) + 1) 
-# r = e + w[2:]
-# print(r)
+#     w = q[18:28] + ' - ' + q[31:41]
+#     e = str(int(w[0:2]) + 1) 
+#     r = e + w[2:]
+#     print(r)
