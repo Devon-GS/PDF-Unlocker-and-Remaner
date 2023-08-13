@@ -4,35 +4,35 @@ from PyPDF2 import PdfReader
 from pypdf import PdfReader, PdfWriter
 from decrypt import password
 
-# Create folders
-locked_files_folder = path.exists('locked_files')
+# # Create folders
+# locked_files_folder = path.exists('locked_files')
 
-if locked_files_folder == False:
-    os.mkdir('locked_files')
+# if locked_files_folder == False:
+#     os.mkdir('locked_files')
 
-# Get list of files
-file_list = os.listdir('locked_files')
-print(file_list)
+# # Get list of files
+# file_list = os.listdir('locked_files')
+# print(file_list)
 
-# Decrypt PDF
-for filename in file_list:
-    file = f'locked_files/{filename}'
+# # Decrypt PDF
+# for filename in file_list:
+#     file = f'locked_files/{filename}'
     
-    # Open files with reader
-    reader = PdfReader(file)
-    writer = PdfWriter()
+#     # Open files with reader
+#     reader = PdfReader(file)
+#     writer = PdfWriter()
     
-    # Check if encrypted
-    if reader.is_encrypted:
-        reader.decrypt(password)
+#     # Check if encrypted
+#     if reader.is_encrypted:
+#         reader.decrypt(password)
 
-    # Add all pages to the writer
-    for page in reader.pages:
-        writer.add_page(page)
+#     # Add all pages to the writer
+#     for page in reader.pages:
+#         writer.add_page(page)
 
-    # Save the new PDF to a file
-    with open(file, "wb") as f:
-        writer.write(f)
+#     # Save the new PDF to a file
+#     with open(file, "wb") as f:
+#         writer.write(f)
 
 
 
@@ -45,11 +45,14 @@ for filename in file_list:
 # # Look up Date of pdf and rename
 # for filename in file_list_unlocked:
 #     file = f'locked_files/{filename}'
+
+#     # Read in file, get number of pages and extract data
 #     reader = PdfReader(file)
 #     number_of_pages = len(reader.pages)
 #     page = reader.pages[0]
 #     text = page.extract_text()
 
+#     # Find Statement date
 #     x = text.find('Statement period')
 #     # print(text[1302:1343])
 
@@ -60,3 +63,25 @@ for filename in file_list:
 #     e = str(int(w[0:2]) + 1) 
 #     r = e + w[2:]
 #     print(r)
+
+
+
+
+
+
+reader = PdfReader('l.pdf')
+number_of_pages = len(reader.pages)
+page = reader.pages[0]
+text = page.extract_text()
+
+# Find Statement date
+x = text.find('Statement period')
+print(x)
+
+q = text[1302:1343]
+# print(q)
+
+w = q[18:28] + ' - ' + q[31:41]
+e = str(int(w[0:2]) + 1) 
+r = e + w[2:]
+# print(r)
