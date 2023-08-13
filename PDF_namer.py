@@ -1,22 +1,38 @@
+import os
+from os import path
 from PyPDF2 import PdfReader
 from pypdf import PdfReader, PdfWriter
 from decrypt import password
 
-# Decrypt PDF
-reader = PdfReader("Locked.pdf")
-writer = PdfWriter()
+# Create folders
+locked_files_folder = path.exists('locked_files')
 
-if reader.is_encrypted:
-    reader.decrypt(password)
+if locked_files_folder == False:
+    os.mkdir('locked_files')
 
-# Add all pages to the writer
-for page in reader.pages:
-    writer.add_page(page)
+# Get list of files
+# file_list = os.listdir('files')
 
-# Save the new PDF to a file
-with open("decrypted-pdf.pdf", "wb") as f:
-    writer.write(f)
 
+
+
+
+
+
+# # Decrypt PDF
+# reader = PdfReader("Locked.pdf")
+# writer = PdfWriter()
+
+# if reader.is_encrypted:
+#     reader.decrypt(password)
+
+# # Add all pages to the writer
+# for page in reader.pages:
+#     writer.add_page(page)
+
+# # Save the new PDF to a file
+# with open("decrypted-pdf.pdf", "wb") as f:
+#     writer.write(f)
 
 
 # # Look up Date of pdf and rename
