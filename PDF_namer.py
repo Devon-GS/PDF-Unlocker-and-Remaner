@@ -6,26 +6,25 @@ from pypdf import PdfReader, PdfWriter
 from decrypt import password
 
 # Create folders
-locked_files_folder = path.exists('lockedFiles')
-# processed_files = path.exists('processed_files')
+locked_files_folder = path.exists('locked_files')
+processed_files = path.exists('processed_files')
 
 if locked_files_folder == False:
-    os.mkdir('lockedFiles')
-# if processed_files == False:
-#     os.mkdir('processed_files')
+    os.mkdir('locked_files')
+if processed_files == False:
+    os.mkdir('processed_files')
 
 # Get list of files
-file_list = os.listdir('lockedFiles')
-# print(file_list)
+file_list = os.listdir('locked_files')
 
 #############################################################################
-# DECRYPT PDF FILES
+# DECRYPT PDF FILES AND RENAME THEM
 #############################################################################
 
 # Decrypt PDF
 for filename in file_list:
-    file = f'lockedFiles/{filename}'
-    path = 'lockedFiles/'
+    file = f'locked_files/{filename}'
+    output_path = 'processed_files/'
     
     # Open files with reader
     reader = PdfReader(file)
@@ -39,63 +38,18 @@ for filename in file_list:
     for page in reader.pages:
         writer.add_page(page)
 
-    # # Save the new PDF to a file
-    # with open(file, "wb") as f:
-    #     writer.write(f)
-
+    # Get page one from pdf
     page_one_text = writer.pages[0].extract_text()
-    # print(page_one_text)
+    
+    # Repalce all spaces with '-' to get rid of special character
     x = page_one_text.encode("ascii", "ignore")
     y = x.decode()
-    y = y.replace(' ','-')
-    # print(y)
-
-    match = re.findall(r"\d{2}\/\d{2}\/\d{4}--\d{2}\/\d{2}\/\d{4}", y)
+    new_data = y.replace(' ','-')
+    
+    # Match regex to date and replace '-' with '.'
+    match = re.findall(r"\d{2}\/\d{2}\/\d{4}--\d{2}\/\d{2}\/\d{4}", new_data)
     new_file_name = match[0].replace('--',' - ').replace('/','.')
-    
-    with open(f"{path}{new_file_name}.pdf", "wb") as f:
+
+    # Save decrypted file with new name in ouput folder
+    with open(f"{output_path}{new_file_name}.pdf", "wb") as f:
         writer.write(f)
-
-
-#############################################################################
-# GET LIST OF FILES AND EXTRACT DATE FOR RENAME
-#############################################################################
-# # Get list of files
-# file_list_unlocked = os.listdir('lockedFiles')
-
-# # Look up Date of pdf and rename
-# for filename in file_list_unlocked:
-#     file = f"lockedFiles/{filename}"
-
-#     # Read in file and extract text
-#     reader = PdfReader(file)
-#     number_of_pages = len(reader.pages)
-#     page = reader.pages[0]
-#     text = page.extract_text()
-
-#     # Find Statement date
-#     find_date_beg = text.find('Statementperiod')
-#     find_date_end = find_date_beg + 41
-
-#     # Get full date
-#     full_date = text[find_date_beg:find_date_end]
-    
-#     # Get date portion of string
-#     date_min = full_date[17:27] + ' - ' + full_date[30:40]
-
-#     # Check if begging date is less that 10
-#     if int(date_min[0:2]) < 10:
-#         date_min_str = str(int(date_min[0:2]) + 1)
-#         date_min_str = '0' + date_min_str
-#     else:
-#         date_min_str = str(int(date_min[0:2]) + 1)
-
-#     # Date to print to file 
-#     date_full = date_min_str + date_min[2:]
-#     date = date_full.replace("/",".")
-
-#     old = f"lockedFiles/{filename}"
-#     new = f"lockedFiles/{date + '.pdf'}"
-    
-#     os.rename(old, new)
-    
